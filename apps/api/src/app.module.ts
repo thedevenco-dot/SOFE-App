@@ -1,0 +1,42 @@
+import { Module } from '@nestjs/common';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { AppConfigModule } from './config/config.module';
+import { DatabaseModule } from './database/database.module';
+import { CryptoModule } from './common/crypto/crypto.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { AdminModule } from './admin/admin.module';
+import { AdminTaxonomyModule } from './admin/taxonomy/admin-taxonomy.module';
+import { AdminCoursesModule } from './admin/courses/admin-courses.module';
+import { HealthModule } from './health/health.module';
+import { MediaModule } from './media/media.module';
+import { WebhooksModule } from './webhooks/webhooks.module';
+import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
+import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
+
+@Module({
+  imports: [
+    AppConfigModule,
+    DatabaseModule,
+    CryptoModule,
+    AuthModule,
+    UsersModule,
+    AdminModule,
+    AdminTaxonomyModule,
+    AdminCoursesModule,
+    HealthModule,
+    MediaModule,
+    WebhooksModule,
+  ],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: AllExceptionsFilter,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
+    },
+  ],
+})
+export class AppModule {}

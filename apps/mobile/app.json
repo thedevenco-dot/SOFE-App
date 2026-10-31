@@ -1,0 +1,26 @@
+{
+  "expo": {
+    "name": "SOFE",
+    "slug": "sofe",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "sofe",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "backgroundColor": "#061E30"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.sofe.app"
+    },
+    "android": {
+      "package": "com.sofe.app"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single"
+    },
+    "plugins": ["expo-router"]
+  }
+}

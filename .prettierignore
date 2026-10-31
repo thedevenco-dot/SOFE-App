@@ -1,0 +1,9 @@
+dist
+.next
+.expo
+node_modules
+pnpm-lock.yaml
+*.tsbuildinfo
+docs/
+sofe-specs/
+*.md

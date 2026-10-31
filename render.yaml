@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: sofe-api-staging
+    env: node
+    plan: standard
+    region: singapore
+    branch: develop
+    buildCommand: pnpm install --frozen-lockfile && pnpm --filter @sofe/shared build && pnpm --filter @sofe/api build
+    startCommand: node apps/api/dist/main.js
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: APP_ENV
+        value: staging
+      - key: PORT
+        value: 4000
+      - key: MONGODB_DB_NAME
+        value: sofe_staging
+      - key: MONGODB_URI
+        sync: false
+      - key: FIELD_ENCRYPTION_KEY
+        sync: false
+      - key: ADMIN_JWT_SECRET
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: CORS_ORIGINS
+        value: https://admin-staging.sofe.edu
+

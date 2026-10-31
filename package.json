@@ -1,0 +1,38 @@
+{
+  "name": "sofe",
+  "private": true,
+  "scripts": {
+    "dev:mobile": "pnpm --filter @sofe/mobile start",
+    "dev:admin": "pnpm --filter @sofe/admin dev",
+    "dev:api": "pnpm --filter @sofe/api start:dev",
+    "build": "pnpm -r run build",
+    "test": "pnpm -r run test",
+    "lint": "eslint .",
+    "typecheck": "pnpm -r run typecheck",
+    "seed": "pnpm --filter @sofe/api seed",
+    "db:migrate": "pnpm --filter @sofe/api db:migrate",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "eslint": "^9.0.0",
+    "husky": "^9.1.0",
+    "prettier": "^3.4.0",
+    "typescript": "~5.7.0",
+    "typescript-eslint": "^8.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.15.0",
+  "overrides": {
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
+  },
+  "resolutions": {
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
+  }
+}
