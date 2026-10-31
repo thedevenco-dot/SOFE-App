@@ -56,6 +56,20 @@ export const ADMIN_NAV_GROUPS: NavGroup[] = [
         requiredPermission: ADMIN_PERMISSIONS.LESSON_READ,
       },
       {
+        id: 'books',
+        title: 'Books Library',
+        href: '/books',
+        iconName: 'BookOpen',
+        requiredPermission: ADMIN_PERMISSIONS.COURSE_READ,
+      },
+      {
+        id: 'videos-library',
+        title: 'Videos Library',
+        href: '/content/videos',
+        iconName: 'Video',
+        requiredPermission: ADMIN_PERMISSIONS.MEDIA_READ,
+      },
+      {
         id: 'articles',
         title: 'Articles',
         href: '/articles',

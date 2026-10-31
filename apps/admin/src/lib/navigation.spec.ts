@@ -70,6 +70,7 @@ describe('Admin Navigation RBAC', () => {
       'courses',
       'categories',
       'instructors',
+      'books',
     ]);
   });
 });

@@ -29,6 +29,7 @@ import {
   LayoutDashboard,
   Layers,
   Film,
+  BookOpen,
   LucideIcon,
 } from 'lucide-react';
 import { useAuth } from '../../lib/auth-context';
@@ -61,6 +62,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
   LayoutDashboard,
   Layers,
   Film,
+  BookOpen,
 };
 
 export function AdminSidebar() {
@@ -264,7 +266,7 @@ export function AdminSidebar() {
                 justifyContent: 'center',
               }}
             >
-              {admin.name.slice(0, 2).toUpperCase()}
+              {(admin.name || admin.email || 'AD').slice(0, 2).toUpperCase()}
             </div>
             <div style={{ overflow: 'hidden' }}>
               <div

@@ -333,6 +333,44 @@ export const bookSchema = z.object({
 });
 export type BookDto = z.infer<typeof bookSchema>;
 
+export const createBookSchema = z.object({
+  title: z.string().min(1).max(200),
+  slug: z.string().min(1).max(120).optional(),
+  author: z.string().min(1).max(100),
+  coverUrl: z.string().url(),
+  descriptionJson: z.record(z.unknown()).optional(),
+  descriptionHtml: z.string().optional(),
+  format: bookFormatSchema,
+  fileUrl: z.string().url().optional(),
+  summaryJson: z.record(z.unknown()).optional(),
+  categoryId: z.string().optional(),
+  tags: z.array(z.string()).default([]).optional(),
+  isFree: z.boolean().default(true).optional(),
+  priceInr: z.number().int().nonnegative().optional(),
+  status: z.enum(['draft', 'published', 'archived']).default('draft').optional(),
+  publishedAt: z.string().datetime().optional(),
+});
+export type CreateBookDto = z.infer<typeof createBookSchema>;
+
+export const updateBookSchema = z.object({
+  title: z.string().min(1).max(200).optional(),
+  slug: z.string().min(1).max(120).optional(),
+  author: z.string().min(1).max(100).optional(),
+  coverUrl: z.string().url().optional(),
+  descriptionJson: z.record(z.unknown()).optional(),
+  descriptionHtml: z.string().optional(),
+  format: bookFormatSchema.optional(),
+  fileUrl: z.string().url().optional(),
+  summaryJson: z.record(z.unknown()).optional(),
+  categoryId: z.string().optional(),
+  tags: z.array(z.string()).optional(),
+  isFree: z.boolean().optional(),
+  priceInr: z.number().int().nonnegative().optional(),
+  status: z.enum(['draft', 'published', 'archived']).optional(),
+  publishedAt: z.string().datetime().optional(),
+});
+export type UpdateBookDto = z.infer<typeof updateBookSchema>;
+
 // 9. Videos (Standalone)
 export const videoItemSchema = z.object({
   id: z.string().optional(),
@@ -354,6 +392,47 @@ export const videoItemSchema = z.object({
   publishedAt: z.string().datetime().optional(),
 });
 export type VideoItemDto = z.infer<typeof videoItemSchema>;
+
+export const createVideoSchema = z.object({
+  title: z.string().min(1).max(200),
+  slug: z.string().min(1).max(120).optional(),
+  description: z.string().optional(),
+  thumbnailUrl: z.string().url(),
+  mux: z
+    .object({
+      assetId: z.string().optional(),
+      playbackId: z.string().optional(),
+      status: muxAssetStatusSchema.optional(),
+    })
+    .default({})
+    .optional(),
+  durationSec: z.number().int().nonnegative().default(0).optional(),
+  topicIds: z.array(z.string()).default([]).optional(),
+  isFree: z.boolean().default(true).optional(),
+  status: z.enum(['draft', 'published', 'archived']).default('draft').optional(),
+  publishedAt: z.string().datetime().optional(),
+});
+export type CreateVideoDto = z.infer<typeof createVideoSchema>;
+
+export const updateVideoSchema = z.object({
+  title: z.string().min(1).max(200).optional(),
+  slug: z.string().min(1).max(120).optional(),
+  description: z.string().optional(),
+  thumbnailUrl: z.string().url().optional(),
+  mux: z
+    .object({
+      assetId: z.string().optional(),
+      playbackId: z.string().optional(),
+      status: muxAssetStatusSchema.optional(),
+    })
+    .optional(),
+  durationSec: z.number().int().nonnegative().optional(),
+  topicIds: z.array(z.string()).optional(),
+  isFree: z.boolean().optional(),
+  status: z.enum(['draft', 'published', 'archived']).optional(),
+  publishedAt: z.string().datetime().optional(),
+});
+export type UpdateVideoDto = z.infer<typeof updateVideoSchema>;
 
 // 10. Quotes
 export const quoteItemSchema = z.object({
