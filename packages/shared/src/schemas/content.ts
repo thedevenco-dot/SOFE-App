@@ -260,6 +260,58 @@ export const articleSchema = z.object({
 });
 export type ArticleDto = z.infer<typeof articleSchema>;
 
+export const createArticleSchema = z.object({
+  title: z.string().min(1).max(200),
+  slug: z.string().min(1).max(120).optional(),
+  excerpt: z.string().max(500).optional(),
+  bodyHtml: z.string().optional(),
+  bodyJson: z.record(z.unknown()).optional(),
+  coverUrl: z.string().url().optional(),
+  coverAlt: z.string().optional(),
+  topicIds: z.array(z.string()).default([]).optional(),
+  primaryTopicId: z.string().optional(),
+  tags: z.array(z.string()).default([]).optional(),
+  authorId: z.string().optional(),
+  readTimeMin: z.number().int().positive().optional(),
+  status: articleStatusSchema.default('draft').optional(),
+  scheduledAt: z.string().datetime().optional(),
+  publishedAt: z.string().datetime().optional(),
+  featured: z.boolean().default(false).optional(),
+  seo: z
+    .object({
+      title: z.string().optional(),
+      description: z.string().optional(),
+    })
+    .optional(),
+});
+export type CreateArticleDto = z.infer<typeof createArticleSchema>;
+
+export const updateArticleSchema = z.object({
+  title: z.string().min(1).max(200).optional(),
+  slug: z.string().min(1).max(120).optional(),
+  excerpt: z.string().max(500).optional(),
+  bodyHtml: z.string().optional(),
+  bodyJson: z.record(z.unknown()).optional(),
+  coverUrl: z.string().url().optional(),
+  coverAlt: z.string().optional(),
+  topicIds: z.array(z.string()).optional(),
+  primaryTopicId: z.string().optional(),
+  tags: z.array(z.string()).optional(),
+  authorId: z.string().optional(),
+  readTimeMin: z.number().int().positive().optional(),
+  status: articleStatusSchema.optional(),
+  scheduledAt: z.string().datetime().optional(),
+  publishedAt: z.string().datetime().optional(),
+  featured: z.boolean().optional(),
+  seo: z
+    .object({
+      title: z.string().optional(),
+      description: z.string().optional(),
+    })
+    .optional(),
+});
+export type UpdateArticleDto = z.infer<typeof updateArticleSchema>;
+
 // 8. Books
 export const bookSchema = z.object({
   id: z.string().optional(),

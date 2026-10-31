@@ -9,6 +9,7 @@ import { AdminModule } from './admin/admin.module';
 import { AdminTaxonomyModule } from './admin/taxonomy/admin-taxonomy.module';
 import { AdminCoursesModule } from './admin/courses/admin-courses.module';
 import { AdminLessonsModule } from './admin/lessons/admin-lessons.module';
+import { AdminArticlesModule } from './admin/articles/admin-articles.module';
 import { HealthModule } from './health/health.module';
 import { MediaModule } from './media/media.module';
 import { WebhooksModule } from './webhooks/webhooks.module';
@@ -26,6 +27,7 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
     AdminTaxonomyModule,
     AdminCoursesModule,
     AdminLessonsModule,
+    AdminArticlesModule,
     HealthModule,
     MediaModule,
     WebhooksModule,
