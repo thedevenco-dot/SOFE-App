@@ -11,4 +11,3 @@ import { AdminCoursesService } from './admin-courses.service';
   exports: [AdminCoursesService],
 })
 export class AdminCoursesModule {}
-

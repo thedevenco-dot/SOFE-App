@@ -43,9 +43,16 @@ export const ADMIN_NAV_GROUPS: NavGroup[] = [
       },
       {
         id: 'lessons',
-        title: 'Lessons & Videos',
+        title: 'Lessons',
         href: '/lessons',
-        iconName: 'Video',
+        iconName: 'Layers',
+        requiredPermission: ADMIN_PERMISSIONS.LESSON_READ,
+      },
+      {
+        id: 'media-videos',
+        title: 'Video Status (Mux)',
+        href: '/media/videos',
+        iconName: 'Film',
         requiredPermission: ADMIN_PERMISSIONS.LESSON_READ,
       },
       {

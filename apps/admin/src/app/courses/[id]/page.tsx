@@ -1155,11 +1155,14 @@ export default function CourseEditorPage() {
                               {iconMap[l.type] || <FileText size={16} />}
                               <div>
                                 <span
+                                  onClick={() => l._id && router.push(`/lessons/${l._id}`)}
                                   style={{
                                     fontWeight: 600,
                                     color: 'var(--color-white)',
                                     fontSize: '14px',
+                                    cursor: l._id ? 'pointer' : 'default',
                                   }}
+                                  title={l._id ? 'Open Lesson Editor' : undefined}
                                 >
                                   {l.title}
                                 </span>
@@ -1190,6 +1193,22 @@ export default function CourseEditorPage() {
                             </div>
 
                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                              {l._id && (
+                                <button
+                                  onClick={() => router.push(`/lessons/${l._id}`)}
+                                  style={{
+                                    fontSize: '11px',
+                                    padding: '4px 8px',
+                                    borderRadius: '6px',
+                                    cursor: 'pointer',
+                                    border: '1px solid var(--color-border)',
+                                    backgroundColor: '#0F273D',
+                                    color: 'var(--color-white)',
+                                  }}
+                                >
+                                  Edit
+                                </button>
+                              )}
                               <button
                                 onClick={() => handleToggleFreePreview(lIdx)}
                                 style={{

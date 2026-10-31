@@ -28,6 +28,7 @@ import {
   Settings,
   LayoutDashboard,
   Layers,
+  Film,
   LucideIcon,
 } from 'lucide-react';
 import { useAuth } from '../../lib/auth-context';
@@ -59,6 +60,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
   Settings,
   LayoutDashboard,
   Layers,
+  Film,
 };
 
 export function AdminSidebar() {

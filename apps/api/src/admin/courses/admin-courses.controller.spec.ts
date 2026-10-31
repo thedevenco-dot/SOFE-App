@@ -82,4 +82,3 @@ describe('AdminCoursesController', () => {
     expect(service.archiveCourse).toHaveBeenCalledWith('c1', 'admin-123');
   });
 });
-

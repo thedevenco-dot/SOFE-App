@@ -24,4 +24,3 @@ export class ContentVersion {
 export const ContentVersionSchema = SchemaFactory.createForClass(ContentVersion);
 
 ContentVersionSchema.index({ entityType: 1, entityId: 1, version: -1 });
-

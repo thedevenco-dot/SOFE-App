@@ -112,6 +112,49 @@ export const lessonSchema = z.object({
 });
 export type LessonDto = z.infer<typeof lessonSchema>;
 
+export const createLessonSchema = z.object({
+  courseId: z.string().min(1),
+  moduleId: z.string().min(1),
+  order: z.number().int().nonnegative().optional(),
+  title: z.string().min(1).max(200),
+  type: lessonTypeSchema,
+  isFreePreview: z.boolean().default(false).optional(),
+  isRequired: z.boolean().default(true).optional(),
+  status: z.enum(['draft', 'published']).default('draft').optional(),
+  durationSec: z.number().int().nonnegative().optional(),
+  video: z
+    .object({
+      mux: z
+        .object({
+          assetId: z.string().optional(),
+          playbackId: z.string().optional(),
+          status: muxAssetStatusSchema.optional(),
+        })
+        .optional(),
+    })
+    .optional(),
+  reading: z
+    .object({
+      bodyJson: z.record(z.unknown()).optional(),
+      bodyHtml: z.string().optional(),
+    })
+    .optional(),
+  quiz: z
+    .object({
+      quizId: z.string().optional(),
+    })
+    .optional(),
+  resource: z
+    .object({
+      resources: z.array(lessonResourceSchema).optional(),
+    })
+    .optional(),
+});
+export type CreateLessonDto = z.infer<typeof createLessonSchema>;
+
+export const updateLessonSchema = lessonSchema.partial();
+export type UpdateLessonDto = z.infer<typeof updateLessonSchema>;
+
 // 6. Courses
 export const courseModuleSchema = z.object({
   id: z.string().optional(),
