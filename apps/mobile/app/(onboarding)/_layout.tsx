@@ -1,6 +1,7 @@
 import React from 'react';
 import { Stack } from 'expo-router';
 import { useTheme } from '../../src/theme/theme-context';
+import { typography } from '../../src/theme/typography';
 
 export default function OnboardingLayout() {
   const { colors, palette } = useTheme();
@@ -11,7 +12,12 @@ export default function OnboardingLayout() {
         headerShown: true,
         headerStyle: { backgroundColor: colors.background },
         headerTintColor: palette.orange,
-        headerTitleStyle: { color: colors.text, fontSize: 15, fontWeight: '700' },
+        headerTitleStyle: {
+          color: colors.text,
+          fontFamily: typography.button.fontFamily,
+          fontSize: typography.button.fontSize,
+          fontWeight: typography.button.fontWeight,
+        },
         headerShadowVisible: false,
         contentStyle: { backgroundColor: colors.background },
       }}

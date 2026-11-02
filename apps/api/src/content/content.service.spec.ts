@@ -158,6 +158,8 @@ describe('ContentService (Public Content Engine - T2.9)', () => {
   let authorModelMock: ReturnType<typeof createMockModel>;
   let bookModelMock: ReturnType<typeof createMockModel>;
   let videoModelMock: ReturnType<typeof createMockModel>;
+  let bookmarkModelMock: ReturnType<typeof createMockModel>;
+  let topicFollowModelMock: ReturnType<typeof createMockModel>;
 
   beforeEach(() => {
     courseModelMock = createMockModel();
@@ -168,6 +170,8 @@ describe('ContentService (Public Content Engine - T2.9)', () => {
     authorModelMock = createMockModel();
     bookModelMock = createMockModel();
     videoModelMock = createMockModel();
+    bookmarkModelMock = createMockModel();
+    topicFollowModelMock = createMockModel();
 
     service = new ContentService(
       courseModelMock as never,
@@ -178,6 +182,8 @@ describe('ContentService (Public Content Engine - T2.9)', () => {
       authorModelMock as never,
       bookModelMock as never,
       videoModelMock as never,
+      bookmarkModelMock as never,
+      topicFollowModelMock as never,
     );
   });
 

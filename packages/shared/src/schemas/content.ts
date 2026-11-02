@@ -7,6 +7,7 @@ import {
   BOOK_FORMATS,
   MUX_ASSET_STATUSES,
   RESOURCE_KINDS,
+  BOOKMARK_TARGET_TYPES,
 } from '../enums/content';
 import { cursorPaginationQuerySchema } from './common';
 
@@ -503,3 +504,24 @@ export const createCourseReviewSchema = z.object({
   rating: z.number().int().min(1).max(5),
   body: z.string().max(1000).optional(),
 });
+
+// Bookmarks & Topic Follows
+export const bookmarkTargetTypeSchema = z.enum(
+  Object.values(BOOKMARK_TARGET_TYPES) as [string, ...string[]],
+);
+
+export const createBookmarkSchema = z.object({
+  targetType: bookmarkTargetTypeSchema,
+  targetId: z.string().min(1),
+});
+export type CreateBookmarkDto = z.infer<typeof createBookmarkSchema>;
+
+export const bookmarkItemSchema = z.object({
+  id: z.string(),
+  userId: z.string(),
+  targetType: bookmarkTargetTypeSchema,
+  targetId: z.string(),
+  target: z.record(z.string(), z.unknown()).optional(),
+  createdAt: z.string().or(z.date()).optional(),
+});
+export type BookmarkItemDto = z.infer<typeof bookmarkItemSchema>;

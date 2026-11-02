@@ -32,24 +32,24 @@ describe('Design Tokens & Themes (DESIGN.md)', () => {
     expect(light.premium).toBe(palette.orangeDeep);
   });
 
-  it('typography styles should strictly follow docs/DESIGN.md scale', () => {
-    expect(typography.display.fontSize).toBe(32);
-    expect(typography.display.lineHeight).toBe(38);
+  it('typography styles should strictly follow docs/DESIGN_V2.md scale', () => {
+    expect(typography.display.fontSize).toBe(28);
+    expect(typography.display.lineHeight).toBe(34);
 
-    expect(typography.title1.fontSize).toBe(26);
-    expect(typography.title1.lineHeight).toBe(32);
+    expect(typography.title1.fontSize).toBe(24);
+    expect(typography.title1.lineHeight).toBe(30);
 
-    expect(typography.title2.fontSize).toBe(22);
-    expect(typography.title2.lineHeight).toBe(28);
+    expect(typography.title2.fontSize).toBe(20);
+    expect(typography.title2.lineHeight).toBe(26);
 
-    expect(typography.title3.fontSize).toBe(18);
-    expect(typography.title3.lineHeight).toBe(24);
+    expect(typography.title3.fontSize).toBe(17);
+    expect(typography.title3.lineHeight).toBe(23);
 
-    expect(typography.body.fontSize).toBe(15);
-    expect(typography.body.lineHeight).toBe(22);
+    expect(typography.body.fontSize).toBe(14);
+    expect(typography.body.lineHeight).toBe(20);
 
-    expect(typography.caption.fontSize).toBe(13);
-    expect(typography.caption.lineHeight).toBe(18);
+    expect(typography.caption.fontSize).toBe(12);
+    expect(typography.caption.lineHeight).toBe(16);
 
     expect(typography.micro.fontSize).toBe(11);
     expect(typography.micro.lineHeight).toBe(14);

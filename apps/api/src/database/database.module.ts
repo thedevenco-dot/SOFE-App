@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigService } from '@nestjs/config';
 import {
@@ -38,8 +38,13 @@ import {
   EnrollmentSchema,
   ContentVersion,
   ContentVersionSchema,
+  Bookmark,
+  BookmarkSchema,
+  TopicFollow,
+  TopicFollowSchema,
 } from './schemas';
 
+@Global()
 @Module({
   imports: [
     MongooseModule.forRootAsync({
@@ -70,6 +75,8 @@ import {
       { name: WebhookEvent.name, schema: WebhookEventSchema },
       { name: Enrollment.name, schema: EnrollmentSchema },
       { name: ContentVersion.name, schema: ContentVersionSchema },
+      { name: Bookmark.name, schema: BookmarkSchema },
+      { name: TopicFollow.name, schema: TopicFollowSchema },
     ]),
   ],
   exports: [MongooseModule],

@@ -194,9 +194,7 @@ export default function PermissionsScreen() {
                   <Text style={[typography.micro, { color: colors.textMuted }]}>{task.id}</Text>
                 </View>
                 <View style={{ flex: 1, marginLeft: spacing.sm }}>
-                  <Text style={[typography.bodyStrong, { color: colors.text, fontSize: 13 }]}>
-                    {task.title}
-                  </Text>
+                  <Text style={[typography.bodyStrong, { color: colors.text }]}>{task.title}</Text>
                   <Text style={[typography.micro, { color: colors.textMuted, marginTop: 2 }]}>
                     {task.category} • {task.duration}
                   </Text>

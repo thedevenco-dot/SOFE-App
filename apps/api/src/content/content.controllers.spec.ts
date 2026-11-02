@@ -1,6 +1,7 @@
 import { CoursesController } from './courses.controller';
 import { ArticlesController } from './articles.controller';
 import { TopicsController } from './topics.controller';
+import { BookmarksController } from './bookmarks.controller';
 import { AuthorsController } from './authors.controller';
 import { BooksController } from './books.controller';
 import { VideosController } from './videos.controller';
@@ -25,6 +26,16 @@ describe('Public Content Controllers (T2.9)', () => {
       listVideos: jest.fn().mockResolvedValue({ data: [{ id: 'v1' }], meta: { total: 1 } }),
       getVideoBySlug: jest.fn().mockResolvedValue({ id: 'v1', title: 'Video 1' }),
       search: jest.fn().mockResolvedValue({ data: {}, meta: { total: 0 } }),
+      listBookmarks: jest
+        .fn()
+        .mockResolvedValue([{ id: 'bm1', targetType: 'article', targetId: 'a1' }]),
+      createBookmark: jest
+        .fn()
+        .mockResolvedValue({ id: 'bm1', targetType: 'article', targetId: 'a1' }),
+      deleteBookmark: jest.fn().mockResolvedValue({ success: true }),
+      followTopic: jest.fn().mockResolvedValue({ success: true }),
+      unfollowTopic: jest.fn().mockResolvedValue({ success: true }),
+      getFollowedTopics: jest.fn().mockResolvedValue(['top1', 'top2']),
     };
   });
 
@@ -112,6 +123,51 @@ describe('Public Content Controllers (T2.9)', () => {
       const searchRes = await searchController.search({ q: 'venture' });
       expect(searchRes).toBeDefined();
       expect(serviceMock.search).toHaveBeenCalledWith({ q: 'venture' });
+    });
+  });
+
+  describe('TopicsController (T2.10)', () => {
+    it('should list topics, follow topic, unfollow topic, and get followed topics', async () => {
+      const controller = new TopicsController(serviceMock as unknown as ContentService);
+      const fakeUser = { _id: { toString: () => 'u123' } } as never;
+
+      const listRes = await controller.listTopics('true');
+      expect(listRes.data).toBeDefined();
+      expect(serviceMock.listTopics).toHaveBeenCalledWith(true);
+
+      const followedRes = await controller.getFollowedTopics(fakeUser);
+      expect(followedRes.data).toEqual(['top1', 'top2']);
+      expect(serviceMock.getFollowedTopics).toHaveBeenCalledWith('u123');
+
+      const followRes = await controller.followTopic('top1', fakeUser);
+      expect(followRes).toEqual({ success: true });
+      expect(serviceMock.followTopic).toHaveBeenCalledWith('u123', 'top1');
+
+      const unfollowRes = await controller.unfollowTopic('top1', fakeUser);
+      expect(unfollowRes).toEqual({ success: true });
+      expect(serviceMock.unfollowTopic).toHaveBeenCalledWith('u123', 'top1');
+    });
+  });
+
+  describe('BookmarksController (T2.10)', () => {
+    it('should list, create, and delete bookmarks', async () => {
+      const controller = new BookmarksController(serviceMock as unknown as ContentService);
+      const fakeUser = { _id: { toString: () => 'u123' } } as never;
+
+      const listRes = await controller.listBookmarks(fakeUser, 'article');
+      expect(listRes.data).toHaveLength(1);
+      expect(serviceMock.listBookmarks).toHaveBeenCalledWith('u123', 'article');
+
+      const createRes = await controller.createBookmark(fakeUser, {
+        targetType: 'article',
+        targetId: 'a1',
+      });
+      expect(createRes.data.id).toBe('bm1');
+      expect(serviceMock.createBookmark).toHaveBeenCalledWith('u123', 'article', 'a1');
+
+      const deleteRes = await controller.deleteBookmark(fakeUser, 'a1', 'article');
+      expect(deleteRes).toEqual({ success: true });
+      expect(serviceMock.deleteBookmark).toHaveBeenCalledWith('u123', 'article', 'a1');
     });
   });
 });

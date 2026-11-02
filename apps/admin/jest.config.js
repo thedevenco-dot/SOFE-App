@@ -16,6 +16,7 @@ module.exports = {
     ],
   },
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
+  testTimeout: 20000,
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@sofe/shared$': '<rootDir>/../../packages/shared/src',

@@ -22,3 +22,7 @@ export * from './enrollment.schema';
 
 // Content Versions (T2.5)
 export * from './content-version.schema';
+
+// Bookmarks & Topic Follows (T2.10)
+export * from './bookmark.schema';
+export * from './topic-follow.schema';

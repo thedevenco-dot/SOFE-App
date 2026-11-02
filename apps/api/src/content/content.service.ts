@@ -18,6 +18,10 @@ import {
   TopicDocument,
   Video,
   VideoDocument,
+  Bookmark,
+  BookmarkDocument,
+  TopicFollow,
+  TopicFollowDocument,
 } from '../database/schemas';
 import {
   ArticleQueryDto,
@@ -84,6 +88,10 @@ export class ContentService {
     private readonly bookModel: Model<BookDocument>,
     @InjectModel(Video.name)
     private readonly videoModel: Model<VideoDocument>,
+    @InjectModel(Bookmark.name)
+    private readonly bookmarkModel: Model<BookmarkDocument>,
+    @InjectModel(TopicFollow.name)
+    private readonly topicFollowModel: Model<TopicFollowDocument>,
   ) {}
 
   // ==========================================
@@ -703,5 +711,141 @@ export class ContentService {
         total,
       },
     };
+  }
+
+  // ==========================================
+  // BOOKMARKS & TOPIC FOLLOWS (T2.10)
+  // ==========================================
+
+  async listBookmarks(userId: string, targetType?: string): Promise<Record<string, unknown>[]> {
+    if (!Types.ObjectId.isValid(userId)) return [];
+
+    const query: Record<string, unknown> = { userId: new Types.ObjectId(userId) };
+    if (targetType) {
+      query.targetType = targetType;
+    }
+
+    const bookmarks = await this.bookmarkModel.find(query).sort({ createdAt: -1 }).exec();
+
+    // Populate targets (primarily articles)
+    const enriched = await Promise.all(
+      bookmarks.map(async (bm) => {
+        const item: Record<string, unknown> = {
+          id: bm._id.toString(),
+          targetType: bm.targetType,
+          targetId: bm.targetId.toString(),
+          createdAt: (bm as unknown as { createdAt?: Date }).createdAt,
+        };
+
+        if (bm.targetType === 'article') {
+          const article = await this.articleModel
+            .findById(bm.targetId)
+            .populate('primaryTopicId', 'name slug')
+            .populate('authorId', 'name title avatarUrl')
+            .exec();
+          if (article) {
+            item.target = { ...article.toObject(), id: article._id.toString() };
+          }
+        }
+        return item;
+      }),
+    );
+
+    return enriched;
+  }
+
+  async createBookmark(
+    userId: string,
+    targetType: string,
+    targetId: string,
+  ): Promise<Record<string, unknown>> {
+    if (!Types.ObjectId.isValid(userId) || !Types.ObjectId.isValid(targetId)) {
+      throw new BadRequestException('Invalid user ID or target ID');
+    }
+
+    const uId = new Types.ObjectId(userId);
+    const tId = new Types.ObjectId(targetId);
+
+    const bookmark = await this.bookmarkModel.findOneAndUpdate(
+      { userId: uId, targetType, targetId: tId },
+      { $setOnInsert: { userId: uId, targetType, targetId: tId } },
+      { upsert: true, new: true },
+    );
+
+    if (targetType === 'article') {
+      await this.articleModel.updateOne({ _id: tId }, { $inc: { 'stats.bookmarks': 1 } }).exec();
+    }
+
+    return {
+      id: bookmark._id.toString(),
+      targetType: bookmark.targetType,
+      targetId: bookmark.targetId.toString(),
+    };
+  }
+
+  async deleteBookmark(
+    userId: string,
+    targetType: string,
+    targetId: string,
+  ): Promise<{ success: boolean }> {
+    if (!Types.ObjectId.isValid(userId) || !Types.ObjectId.isValid(targetId)) {
+      throw new BadRequestException('Invalid user ID or target ID');
+    }
+
+    const uId = new Types.ObjectId(userId);
+    const tId = new Types.ObjectId(targetId);
+
+    const result = await this.bookmarkModel
+      .findOneAndDelete({ userId: uId, targetType, targetId: tId })
+      .exec();
+
+    if (result && targetType === 'article') {
+      await this.articleModel
+        .updateOne({ _id: tId, 'stats.bookmarks': { $gt: 0 } }, { $inc: { 'stats.bookmarks': -1 } })
+        .exec();
+    }
+
+    return { success: !!result };
+  }
+
+  async followTopic(userId: string, topicId: string): Promise<{ success: boolean }> {
+    if (!Types.ObjectId.isValid(userId) || !Types.ObjectId.isValid(topicId)) {
+      throw new BadRequestException('Invalid user ID or topic ID');
+    }
+
+    const uId = new Types.ObjectId(userId);
+    const topId = new Types.ObjectId(topicId);
+
+    await this.topicFollowModel.findOneAndUpdate(
+      { userId: uId, topicId: topId },
+      { $setOnInsert: { userId: uId, topicId: topId } },
+      { upsert: true },
+    );
+
+    return { success: true };
+  }
+
+  async unfollowTopic(userId: string, topicId: string): Promise<{ success: boolean }> {
+    if (!Types.ObjectId.isValid(userId) || !Types.ObjectId.isValid(topicId)) {
+      throw new BadRequestException('Invalid user ID or topic ID');
+    }
+
+    const uId = new Types.ObjectId(userId);
+    const topId = new Types.ObjectId(topicId);
+
+    await this.topicFollowModel.findOneAndDelete({ userId: uId, topicId: topId }).exec();
+
+    return { success: true };
+  }
+
+  async getFollowedTopics(userId: string): Promise<string[]> {
+    if (!Types.ObjectId.isValid(userId)) return [];
+
+    const follows = await this.topicFollowModel
+      .find({ userId: new Types.ObjectId(userId) })
+      .select('topicId')
+      .exec();
+
+    return follows.map((f) => f.topicId.toString());
   }
 }
