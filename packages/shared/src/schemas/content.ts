@@ -460,6 +460,7 @@ export const courseQuerySchema = cursorPaginationQuerySchema.extend({
   level: courseLevelSchema.optional(),
   price: z.enum(['free', 'paid']).optional(),
 });
+export type CourseQueryDto = z.infer<typeof courseQuerySchema>;
 
 export const lessonProgressUpdateSchema = z.object({
   watchedSec: z.number().int().nonnegative(),
@@ -471,6 +472,28 @@ export const articleQuerySchema = cursorPaginationQuerySchema.extend({
   topic: z.string().optional(),
   q: z.string().optional(),
 });
+export type ArticleQueryDto = z.infer<typeof articleQuerySchema>;
+
+export const bookQuerySchema = cursorPaginationQuerySchema.extend({
+  q: z.string().optional(),
+  category: z.string().optional(),
+  format: z.enum(['pdf', 'summary']).optional(),
+  price: z.enum(['free', 'paid']).optional(),
+});
+export type BookQueryDto = z.infer<typeof bookQuerySchema>;
+
+export const videoQuerySchema = cursorPaginationQuerySchema.extend({
+  q: z.string().optional(),
+  topic: z.string().optional(),
+  price: z.enum(['free', 'paid']).optional(),
+});
+export type VideoQueryDto = z.infer<typeof videoQuerySchema>;
+
+export const searchQuerySchema = cursorPaginationQuerySchema.extend({
+  q: z.string().min(1),
+  type: z.enum(['course', 'article', 'book', 'video']).optional(),
+});
+export type SearchQueryDto = z.infer<typeof searchQuerySchema>;
 
 export const articleReadProgressSchema = z.object({
   percent: z.number().min(0).max(100),

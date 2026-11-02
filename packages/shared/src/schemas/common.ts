@@ -14,7 +14,7 @@ export const objectIdSchema = z
   .regex(/^[0-9a-fA-F]{24}$/, 'Must be a valid 24-character hex ObjectId');
 
 export const cursorPaginationQuerySchema = z.object({
-  limit: z.coerce.number().int().min(1).max(50).default(20),
+  limit: z.coerce.number().int().min(1).max(50).default(20).optional(),
   cursor: z.string().optional(),
 });
 

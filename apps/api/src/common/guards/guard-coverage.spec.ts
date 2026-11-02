@@ -5,6 +5,13 @@ import { AuthController } from '../../auth/auth.controller';
 import { UsersController } from '../../users/users.controller';
 import { AdminAuthController } from '../../admin/admin-auth.controller';
 import { AdminAuditController } from '../../admin/admin-audit.controller';
+import { CoursesController } from '../../content/courses.controller';
+import { ArticlesController } from '../../content/articles.controller';
+import { TopicsController } from '../../content/topics.controller';
+import { AuthorsController } from '../../content/authors.controller';
+import { BooksController } from '../../content/books.controller';
+import { VideosController } from '../../content/videos.controller';
+import { SearchController } from '../../content/search.controller';
 import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
 import { IS_AUTH_KEY } from '../decorators/auth.decorator';
 import { IS_ADMIN_AUTH_KEY } from '../decorators/admin-auth.decorator';
@@ -18,6 +25,13 @@ describe('Guard Coverage Security Audit', () => {
     UsersController,
     AdminAuthController,
     AdminAuditController,
+    CoursesController,
+    ArticlesController,
+    TopicsController,
+    AuthorsController,
+    BooksController,
+    VideosController,
+    SearchController,
   ];
 
   function isRouteGuarded(targetClass: Type<unknown>, methodName: string): boolean {
