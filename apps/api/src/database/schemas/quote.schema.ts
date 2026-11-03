@@ -21,6 +21,9 @@ export class Quote {
     default: 'published',
   })
   status!: 'draft' | 'published' | 'archived';
+
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export const QuoteSchema = SchemaFactory.createForClass(Quote);

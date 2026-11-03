@@ -111,6 +111,13 @@ export const ADMIN_NAV_GROUPS: NavGroup[] = [
         requiredPermission: ADMIN_PERMISSIONS.PRACTISE_SCHEDULE,
       },
       {
+        id: 'points',
+        title: 'Points & Rules',
+        href: '/points',
+        iconName: 'Zap',
+        requiredPermission: ADMIN_PERMISSIONS.USER_READ,
+      },
+      {
         id: 'rewards',
         title: 'Rewards & Store',
         href: '/rewards',

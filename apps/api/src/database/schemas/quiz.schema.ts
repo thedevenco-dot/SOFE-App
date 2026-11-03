@@ -83,6 +83,9 @@ export class Quiz {
 
   @Prop({ type: Number, default: 0 })
   order?: number;
+
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export const QuizSchema = SchemaFactory.createForClass(Quiz);

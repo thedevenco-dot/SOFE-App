@@ -20,6 +20,11 @@ import { PointsController } from '../../points/points.controller';
 import { StreakController } from '../../points/streak.controller';
 import { QuizzesController } from '../../practice/quizzes.controller';
 import { PractiseController } from '../../practice/practise.controller';
+import { AdminQuizzesController } from '../../admin/practice/admin-quizzes.controller';
+import { AdminPracticeScheduleController } from '../../admin/practice/admin-practice-schedule.controller';
+import { AdminPointsController } from '../../admin/practice/admin-points.controller';
+import { AdminRewardsController } from '../../admin/practice/admin-rewards.controller';
+import { AdminQuotesPromptsController } from '../../admin/practice/admin-quotes-prompts.controller';
 import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
 import { IS_AUTH_KEY } from '../decorators/auth.decorator';
 import { IS_ADMIN_AUTH_KEY } from '../decorators/admin-auth.decorator';
@@ -48,6 +53,11 @@ describe('Guard Coverage Security Audit', () => {
     StreakController,
     QuizzesController,
     PractiseController,
+    AdminQuizzesController,
+    AdminPracticeScheduleController,
+    AdminPointsController,
+    AdminRewardsController,
+    AdminQuotesPromptsController,
   ];
 
   function isRouteGuarded(targetClass: Type<unknown>, methodName: string): boolean {

@@ -18,6 +18,9 @@ export class Word {
     default: 'published',
   })
   status!: 'draft' | 'published' | 'archived';
+
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export const WordSchema = SchemaFactory.createForClass(Word);

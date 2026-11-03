@@ -251,3 +251,151 @@ export const practiceTodayResponseSchema = z.object({
 });
 
 export type PracticeTodayResponse = z.infer<typeof practiceTodayResponseSchema>;
+
+// ==========================================
+// Admin Practice, Scheduler & Rewards (T3.5)
+// ==========================================
+
+import { REWARD_TYPES, type RewardType } from '../enums/practice';
+
+export const createAdminQuizSchema = z.object({
+  title: z.string().min(1),
+  kind: quizKindSchema,
+  lessonId: z.string().optional(),
+  topicId: z.string().optional(),
+  passingScorePercent: z.number().int().min(0).max(100).default(80),
+  questions: z.array(quizQuestionSchema).min(1),
+  status: z.enum(['draft', 'published']).default('draft'),
+  order: z.number().int().optional(),
+});
+export type CreateAdminQuizDto = z.infer<typeof createAdminQuizSchema>;
+
+export const updateAdminQuizSchema = createAdminQuizSchema.partial();
+export type UpdateAdminQuizDto = z.infer<typeof updateAdminQuizSchema>;
+
+export const csvQuizImportRowSchema = z.object({
+  quiz_title: z.string().min(1),
+  question: z.string().min(1),
+  type: z.enum(['single', 'multi', 'true_false']),
+  option_a: z.string().min(1),
+  option_b: z.string().min(1),
+  option_c: z.string().optional(),
+  option_d: z.string().optional(),
+  option_e: z.string().optional(),
+  option_f: z.string().optional(),
+  correct: z.string().min(1),
+  explanation: z.string().min(1),
+  hint: z.string().optional(),
+});
+export type CsvQuizImportRow = z.infer<typeof csvQuizImportRowSchema>;
+
+export const csvImportDryRunResponseSchema = z.object({
+  totalRows: z.number().int(),
+  validRows: z.number().int(),
+  errorRows: z.number().int(),
+  quizzesDetected: z.number().int(),
+  errors: z.array(
+    z.object({
+      row: z.number().int(),
+      field: z.string(),
+      message: z.string(),
+    }),
+  ),
+  preview: z.array(
+    z.object({
+      quizTitle: z.string(),
+      questionText: z.string(),
+      type: z.string(),
+      optionsCount: z.number().int(),
+      correctCount: z.number().int(),
+    }),
+  ),
+});
+export type CsvImportDryRunResponse = z.infer<typeof csvImportDryRunResponseSchema>;
+
+export const globalPracticeScheduleSchema = z.object({
+  id: z.string().min(1),
+  dateKey: dateKeySchema,
+  slots: z.array(practiceSlotSchema),
+  createdAt: z.string().datetime().optional(),
+  updatedAt: z.string().datetime().optional(),
+});
+export type GlobalPracticeScheduleDto = z.infer<typeof globalPracticeScheduleSchema>;
+
+export const updateScheduleDateSchema = z.object({
+  slots: z.array(practiceSlotSchema),
+});
+export type UpdateScheduleDateDto = z.infer<typeof updateScheduleDateSchema>;
+
+export const copyWeekScheduleSchema = z.object({
+  sourceFromDateKey: dateKeySchema,
+  targetFromDateKey: dateKeySchema,
+});
+export type CopyWeekScheduleDto = z.infer<typeof copyWeekScheduleSchema>;
+
+export const pointsRulesSchema = z.object({
+  quizPoints: z.number().int().nonnegative().default(50),
+  lessonPoints: z.number().int().nonnegative().default(25),
+  dailyStreakBonus: z.number().int().nonnegative().default(50),
+  maxDailyPoints: z.number().int().nonnegative().default(500),
+  freeCourseCost: z.number().int().nonnegative().default(500),
+});
+export type PointsRulesDto = z.infer<typeof pointsRulesSchema>;
+
+export const adminAdjustPointsSchema = z.object({
+  userId: z.string().min(1),
+  amount: z.number().int(),
+  reason: z.string().default('admin_adjust'),
+  note: z.string().min(1),
+});
+export type AdminAdjustPointsDto = z.infer<typeof adminAdjustPointsSchema>;
+
+export const rewardTypeSchema = z.enum(
+  Object.values(REWARD_TYPES) as [RewardType, ...RewardType[]],
+);
+
+export const rewardSchema = z.object({
+  id: z.string().min(1),
+  title: z.string().min(1),
+  description: z.string().min(1),
+  type: rewardTypeSchema,
+  costPoints: z.number().int().min(1),
+  courseId: z.string().optional(),
+  couponCode: z.string().optional(),
+  stock: z.number().int().nullable().optional(),
+  status: z.enum(['active', 'inactive']).default('active'),
+  createdAt: z.string().datetime().optional(),
+  updatedAt: z.string().datetime().optional(),
+});
+export type RewardDto = z.infer<typeof rewardSchema>;
+
+export const createRewardSchema = rewardSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+export type CreateRewardDto = z.infer<typeof createRewardSchema>;
+
+export const updateRewardSchema = createRewardSchema.partial();
+export type UpdateRewardDto = z.infer<typeof updateRewardSchema>;
+
+export const reflectionPromptSchema = z.object({
+  id: z.string().min(1),
+  prompt: z.string().min(1),
+  category: z.string().optional(),
+  active: z.boolean().default(true),
+  order: z.number().int().default(0),
+  createdAt: z.string().datetime().optional(),
+  updatedAt: z.string().datetime().optional(),
+});
+export type ReflectionPromptDto = z.infer<typeof reflectionPromptSchema>;
+
+export const createReflectionPromptSchema = reflectionPromptSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+export type CreateReflectionPromptDto = z.infer<typeof createReflectionPromptSchema>;
+
+export const updateReflectionPromptSchema = createReflectionPromptSchema.partial();
+export type UpdateReflectionPromptDto = z.infer<typeof updateReflectionPromptSchema>;

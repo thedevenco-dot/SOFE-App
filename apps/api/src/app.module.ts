@@ -12,6 +12,7 @@ import { AdminLessonsModule } from './admin/lessons/admin-lessons.module';
 import { AdminArticlesModule } from './admin/articles/admin-articles.module';
 import { AdminBooksModule } from './admin/books/admin-books.module';
 import { AdminVideosModule } from './admin/videos/admin-videos.module';
+import { AdminPracticeModule } from './admin/practice/admin-practice.module';
 import { ContentModule } from './content/content.module';
 import { LearningModule } from './learning/learning.module';
 import { HomeModule } from './home/home.module';
@@ -37,6 +38,7 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
     AdminArticlesModule,
     AdminBooksModule,
     AdminVideosModule,
+    AdminPracticeModule,
     ContentModule,
     LearningModule,
     HomeModule,

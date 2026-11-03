@@ -58,7 +58,7 @@ export default function VisionEditScreen() {
     try {
       if (isEditing && params.id) {
         await homeApi.updateVisionBoardItem(params.id, {
-          caption: caption.trim() || undefined,
+          caption: caption.trim(),
         });
       } else {
         await homeApi.createVisionBoardItem({

@@ -30,6 +30,7 @@ import {
   Layers,
   Film,
   BookOpen,
+  Zap,
   LucideIcon,
 } from 'lucide-react';
 import { useAuth } from '../../lib/auth-context';
@@ -63,6 +64,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
   Layers,
   Film,
   BookOpen,
+  Zap,
 };
 
 export function AdminSidebar() {
@@ -282,7 +284,7 @@ export function AdminSidebar() {
                 {admin.name}
               </div>
               <div style={{ marginTop: '2px' }}>
-                <Badge variant="orange">{admin.roles[0]?.toUpperCase() || 'STAFF'}</Badge>
+                <Badge variant="orange">{admin?.roles?.[0]?.toUpperCase() || 'STAFF'}</Badge>
               </div>
             </div>
           </div>
