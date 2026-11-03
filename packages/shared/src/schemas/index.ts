@@ -4,3 +4,4 @@ export * from './content';
 export * from './practice';
 export * from './commerce';
 export * from './media';
+export * from './home';

@@ -27,3 +27,7 @@ export * from './content-version.schema';
 // Bookmarks & Topic Follows (T2.10)
 export * from './bookmark.schema';
 export * from './topic-follow.schema';
+
+// Home & Daily Protocol (T3.1)
+export * from './vision-board-item.schema';
+export * from './daily-plan.schema';

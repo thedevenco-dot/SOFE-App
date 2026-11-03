@@ -12,6 +12,10 @@ import { AuthorsController } from '../../content/authors.controller';
 import { BooksController } from '../../content/books.controller';
 import { VideosController } from '../../content/videos.controller';
 import { SearchController } from '../../content/search.controller';
+import { EnrollmentsController } from '../../learning/enrollments.controller';
+import { LearningCoursesController } from '../../learning/learning-courses.controller';
+import { LessonsController } from '../../learning/lessons.controller';
+import { HomeController } from '../../home/home.controller';
 import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
 import { IS_AUTH_KEY } from '../decorators/auth.decorator';
 import { IS_ADMIN_AUTH_KEY } from '../decorators/admin-auth.decorator';
@@ -32,6 +36,10 @@ describe('Guard Coverage Security Audit', () => {
     BooksController,
     VideosController,
     SearchController,
+    EnrollmentsController,
+    LearningCoursesController,
+    LessonsController,
+    HomeController,
   ];
 
   function isRouteGuarded(targetClass: Type<unknown>, methodName: string): boolean {
