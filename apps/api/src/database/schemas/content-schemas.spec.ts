@@ -4,6 +4,7 @@ import { TopicSchema } from './topic.schema';
 import { AuthorSchema } from './author.schema';
 import { CourseSchema } from './course.schema';
 import { LessonSchema } from './lesson.schema';
+import { LessonProgressSchema } from './lesson-progress.schema';
 import { ArticleSchema } from './article.schema';
 import { BookSchema } from './book.schema';
 import { VideoSchema } from './video.schema';
@@ -208,6 +209,30 @@ describe('Content Database Schemas (Task 2.2)', () => {
       // Verify unique words
       const words = new Set(SEED_WORDS.map((w) => w.word));
       expect(words.size).toBe(SEED_WORDS.length);
+    });
+  });
+
+  describe('LessonProgressSchema (Task 2.12)', () => {
+    it('should have required paths and compound indexes registered', () => {
+      const paths = LessonProgressSchema.paths;
+      expect(paths['userId']).toBeDefined();
+      expect(paths['courseId']).toBeDefined();
+      expect(paths['lessonId']).toBeDefined();
+      expect(paths['status']).toBeDefined();
+      expect(paths['watchedSec']).toBeDefined();
+      expect(paths['percent']).toBeDefined();
+      expect(paths['lastEventAt']).toBeDefined();
+
+      const indexes = LessonProgressSchema.indexes();
+      const uniqueCompound = indexes.find(
+        (idx) => idx[0]['userId'] === 1 && idx[0]['lessonId'] === 1 && idx[1]?.unique === true,
+      );
+      expect(uniqueCompound).toBeDefined();
+
+      const userCourseIndex = indexes.find(
+        (idx) => idx[0]['userId'] === 1 && idx[0]['courseId'] === 1,
+      );
+      expect(userCourseIndex).toBeDefined();
     });
   });
 });

@@ -13,6 +13,7 @@ import { AdminArticlesModule } from './admin/articles/admin-articles.module';
 import { AdminBooksModule } from './admin/books/admin-books.module';
 import { AdminVideosModule } from './admin/videos/admin-videos.module';
 import { ContentModule } from './content/content.module';
+import { LearningModule } from './learning/learning.module';
 import { HealthModule } from './health/health.module';
 import { MediaModule } from './media/media.module';
 import { WebhooksModule } from './webhooks/webhooks.module';
@@ -34,6 +35,7 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
     AdminBooksModule,
     AdminVideosModule,
     ContentModule,
+    LearningModule,
     HealthModule,
     MediaModule,
     WebhooksModule,

@@ -19,6 +19,7 @@ export * from './word.schema';
 // Media & Webhooks (T2.3)
 export * from './webhook-event.schema';
 export * from './enrollment.schema';
+export * from './lesson-progress.schema';
 
 // Content Versions (T2.5)
 export * from './content-version.schema';
