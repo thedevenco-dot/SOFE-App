@@ -18,6 +18,8 @@ import { LessonsController } from '../../learning/lessons.controller';
 import { HomeController } from '../../home/home.controller';
 import { PointsController } from '../../points/points.controller';
 import { StreakController } from '../../points/streak.controller';
+import { QuizzesController } from '../../practice/quizzes.controller';
+import { PractiseController } from '../../practice/practise.controller';
 import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
 import { IS_AUTH_KEY } from '../decorators/auth.decorator';
 import { IS_ADMIN_AUTH_KEY } from '../decorators/admin-auth.decorator';
@@ -44,6 +46,8 @@ describe('Guard Coverage Security Audit', () => {
     HomeController,
     PointsController,
     StreakController,
+    QuizzesController,
+    PractiseController,
   ];
 
   function isRouteGuarded(targetClass: Type<unknown>, methodName: string): boolean {

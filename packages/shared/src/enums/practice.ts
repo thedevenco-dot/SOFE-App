@@ -5,6 +5,13 @@ export const QUIZ_KINDS = {
 
 export type QuizKind = (typeof QUIZ_KINDS)[keyof typeof QUIZ_KINDS];
 
+export const QUIZ_STATUSES = {
+  DRAFT: 'draft',
+  PUBLISHED: 'published',
+} as const;
+
+export type QuizStatus = (typeof QUIZ_STATUSES)[keyof typeof QUIZ_STATUSES];
+
 export const QUESTION_TYPES = {
   SINGLE: 'single',
   MULTI: 'multi',

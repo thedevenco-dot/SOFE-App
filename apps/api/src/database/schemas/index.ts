@@ -35,3 +35,8 @@ export * from './daily-plan.schema';
 // Points Ledger & Streak (T3.3)
 export * from './points-ledger.schema';
 export * from './streak-day.schema';
+
+// Quiz & Practice Engine (T3.4)
+export * from './quiz.schema';
+export * from './practice-attempt.schema';
+export * from './practice-schedule.schema';
