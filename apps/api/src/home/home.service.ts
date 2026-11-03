@@ -1,8 +1,9 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, Optional } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import {
   ERROR_CODES,
+  POINTS_LEDGER_REASONS,
   CreateVisionBoardItemDto,
   UpdateVisionBoardItemDto,
   HomeDashboardResponse,
@@ -23,6 +24,8 @@ import {
   UserDocument,
 } from '../database/schemas';
 import { LearningService } from '../learning/learning.service';
+import { PointsService } from '../points/points.service';
+import { StreakService } from '../points/streak.service';
 
 export function getDateKeyInTimezone(tz?: string): { dateKey: string; hour: number } {
   try {
@@ -75,6 +78,10 @@ export class HomeService {
     @InjectModel(User.name)
     private readonly userModel: Model<UserDocument>,
     private readonly learningService: LearningService,
+    @Optional()
+    private readonly pointsService?: PointsService,
+    @Optional()
+    private readonly streakService?: StreakService,
   ) {}
 
   // ==========================================
@@ -251,6 +258,39 @@ export class HomeService {
     targetItem.doneAt = done ? new Date() : undefined;
     plan.completedCount = plan.items.filter((i) => i.done).length;
     await plan.save();
+
+    // Hook: If task completed, record streak activity and award points
+    if (done) {
+      if (this.streakService) {
+        await this.streakService
+          .recordActivity(userId, plan.dateKey, undefined, 1, 25)
+          .catch(() => null);
+      }
+      if (this.pointsService) {
+        await this.pointsService
+          .awardPoints({
+            userId,
+            amount: 25,
+            reason: POINTS_LEDGER_REASONS.LESSON,
+            idempotencyKey: `task:${userId}:${plan.dateKey}:${taskId}`,
+            note: `Completed daily protocol task: ${targetItem.label}`,
+          })
+          .catch(() => null);
+
+        // Streak bonus if all tasks completed
+        if (plan.completedCount === plan.items.length && plan.items.length > 0) {
+          await this.pointsService
+            .awardPoints({
+              userId,
+              amount: 50,
+              reason: POINTS_LEDGER_REASONS.STREAK_BONUS,
+              idempotencyKey: `streak_bonus:${userId}:${plan.dateKey}`,
+              note: `Completed all daily protocol tasks for ${plan.dateKey}`,
+            })
+            .catch(() => null);
+        }
+      }
+    }
 
     return {
       id: plan._id.toString(),
@@ -452,8 +492,8 @@ export class HomeService {
         cohortLabel: 'COHORT IX · WEEK 4',
       },
       streak: {
-        currentStreakDays: 26,
-        points: 1420,
+        currentStreakDays: user?.streak?.current || 26,
+        points: user?.pointsBalance !== undefined ? user.pointsBalance : 1420,
       },
       quote,
       word,

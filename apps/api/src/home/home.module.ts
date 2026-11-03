@@ -16,6 +16,7 @@ import {
 } from '../database/schemas';
 import { LearningModule } from '../learning/learning.module';
 import { AuthModule } from '../auth/auth.module';
+import { PointsModule } from '../points/points.module';
 import { HomeService } from './home.service';
 import { HomeController } from './home.controller';
 
@@ -31,6 +32,7 @@ import { HomeController } from './home.controller';
     ]),
     LearningModule,
     AuthModule,
+    PointsModule,
   ],
   controllers: [HomeController],
   providers: [HomeService],

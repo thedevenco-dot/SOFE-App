@@ -15,6 +15,7 @@ import { AdminVideosModule } from './admin/videos/admin-videos.module';
 import { ContentModule } from './content/content.module';
 import { LearningModule } from './learning/learning.module';
 import { HomeModule } from './home/home.module';
+import { PointsModule } from './points/points.module';
 import { HealthModule } from './health/health.module';
 import { MediaModule } from './media/media.module';
 import { WebhooksModule } from './webhooks/webhooks.module';
@@ -38,6 +39,7 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
     ContentModule,
     LearningModule,
     HomeModule,
+    PointsModule,
     HealthModule,
     MediaModule,
     WebhooksModule,

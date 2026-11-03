@@ -31,3 +31,7 @@ export * from './topic-follow.schema';
 // Home & Daily Protocol (T3.1)
 export * from './vision-board-item.schema';
 export * from './daily-plan.schema';
+
+// Points Ledger & Streak (T3.3)
+export * from './points-ledger.schema';
+export * from './streak-day.schema';
