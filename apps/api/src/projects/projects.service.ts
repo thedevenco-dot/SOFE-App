@@ -41,7 +41,7 @@ export class ProjectsService {
       await this.userModel.updateOne({ _id: created.userId }, { $inc: { 'counters.projects': 1 } });
     }
 
-    return this.formatProject(created.toObject());
+    return this.formatProject(created.toObject() as unknown as Record<string, unknown>);
   }
 
   async findById(id: string, currentUserId?: string) {
@@ -77,7 +77,10 @@ export class ProjectsService {
     }
 
     const user = await this.userModel.findById(project.userId).lean();
-    return this.formatProject(project, user);
+    return this.formatProject(
+      project as unknown as Record<string, unknown>,
+      user as unknown as Record<string, unknown> | undefined,
+    );
   }
 
   async list(query: ProjectQueryDto, currentUserId?: string) {
@@ -175,7 +178,7 @@ export class ProjectsService {
       );
     }
 
-    return this.formatProject(project.toObject());
+    return this.formatProject(project.toObject() as unknown as Record<string, unknown>);
   }
 
   async delete(id: string, userId: string) {
@@ -212,7 +215,7 @@ export class ProjectsService {
     return { success: true };
   }
 
-  private formatProject(project: Record<string, unknown>, user?: Record<string, unknown>) {
+  private formatProject(project: Record<string, unknown>, user?: Record<string, unknown> | null) {
     const id = project._id ? String(project._id) : String(project.id || '');
     const userId = project.userId ? String(project.userId) : '';
     return {

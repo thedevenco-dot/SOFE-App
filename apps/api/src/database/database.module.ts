@@ -48,6 +48,10 @@ import {
   UserAchievementSchema,
   Project,
   ProjectSchema,
+  Notification,
+  NotificationSchema,
+  PushCampaign,
+  PushCampaignSchema,
 } from './schemas';
 
 @Global()
@@ -86,6 +90,8 @@ import {
       { name: Achievement.name, schema: AchievementSchema },
       { name: UserAchievement.name, schema: UserAchievementSchema },
       { name: Project.name, schema: ProjectSchema },
+      { name: Notification.name, schema: NotificationSchema },
+      { name: PushCampaign.name, schema: PushCampaignSchema },
     ]),
   ],
   exports: [MongooseModule],

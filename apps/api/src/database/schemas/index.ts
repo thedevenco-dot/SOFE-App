@@ -53,3 +53,7 @@ export * from './user-achievement.schema';
 
 // Projects & Portfolio (T3.9)
 export * from './project.schema';
+
+// Notifications & Push (T3.10)
+export * from './notification.schema';
+export * from './push-campaign.schema';

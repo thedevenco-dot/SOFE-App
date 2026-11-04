@@ -6,3 +6,4 @@ export * from './commerce';
 export * from './media';
 export * from './home';
 export * from './projects';
+export * from './notifications';

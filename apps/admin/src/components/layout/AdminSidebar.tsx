@@ -31,6 +31,7 @@ import {
   Film,
   BookOpen,
   Zap,
+  Bell,
   LucideIcon,
 } from 'lucide-react';
 import { useAuth } from '../../lib/auth-context';
@@ -65,6 +66,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
   Film,
   BookOpen,
   Zap,
+  Bell,
 };
 
 export function AdminSidebar() {

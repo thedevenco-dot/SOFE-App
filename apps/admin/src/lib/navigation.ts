@@ -90,6 +90,13 @@ export const ADMIN_NAV_GROUPS: NavGroup[] = [
         iconName: 'Users',
         requiredPermission: ADMIN_PERMISSIONS.AUTHOR_READ,
       },
+      {
+        id: 'push-notifications',
+        title: 'Push Notifications',
+        href: '/notifications',
+        iconName: 'Bell',
+        requiredPermission: ADMIN_PERMISSIONS.PUSH_SEND,
+      },
     ],
   },
   {

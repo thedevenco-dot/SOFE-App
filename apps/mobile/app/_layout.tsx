@@ -30,6 +30,8 @@ function AppNavigation() {
         <Stack.Screen name="practise" options={{ headerShown: false }} />
         <Stack.Screen name="profile" options={{ headerShown: false }} />
         <Stack.Screen name="startup-world" options={{ headerShown: false }} />
+        <Stack.Screen name="notifications" options={{ headerShown: false }} />
+        <Stack.Screen name="settings" options={{ headerShown: false }} />
         <Stack.Screen name="gallery" options={{ headerShown: false }} />
       </Stack>
     </>

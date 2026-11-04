@@ -21,6 +21,7 @@ import { PracticeModule } from './practice/practice.module';
 import { RewardsModule } from './rewards/rewards.module';
 import { AchievementsModule } from './achievements/achievements.module';
 import { ProjectsModule } from './projects/projects.module';
+import { NotificationsModule } from './notifications/notifications.module';
 import { HealthModule } from './health/health.module';
 import { MediaModule } from './media/media.module';
 import { WebhooksModule } from './webhooks/webhooks.module';
@@ -50,6 +51,7 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
     RewardsModule,
     AchievementsModule,
     ProjectsModule,
+    NotificationsModule,
     HealthModule,
     MediaModule,
     WebhooksModule,

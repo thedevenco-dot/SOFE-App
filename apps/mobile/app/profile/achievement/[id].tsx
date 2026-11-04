@@ -124,7 +124,7 @@ export default function AchievementDetailModal() {
               ]}
             >
               <Text style={[typography.captionStrong, { color: palette.gold }]}>
-                +{achievement.tier === 'gold' ? 50 : achievement.tier === 'platinum' ? 100 : 25} PTS
+                +{achievement.tier === ('gold' as string) ? 50 : 25} PTS
               </Text>
             </View>
           </View>
