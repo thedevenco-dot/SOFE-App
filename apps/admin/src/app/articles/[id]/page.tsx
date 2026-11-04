@@ -72,7 +72,7 @@ export interface ArticleFullData {
   };
 }
 
-export function slugify(text: string): string {
+function slugify(text: string): string {
   return text
     .toLowerCase()
     .trim()
@@ -81,7 +81,7 @@ export function slugify(text: string): string {
     .replace(/^-+|-+$/g, '');
 }
 
-export function sanitizeHtml(html: string): string {
+function sanitizeHtml(html: string): string {
   if (!html) return '';
   return html
     .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
@@ -90,7 +90,7 @@ export function sanitizeHtml(html: string): string {
     .trim();
 }
 
-export function calculateReadTime(html: string): number {
+function calculateReadTime(html: string): number {
   if (!html) return 1;
   const text = html
     .replace(/<[^>]*>/g, ' ')

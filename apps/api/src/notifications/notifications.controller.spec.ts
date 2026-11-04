@@ -1,7 +1,6 @@
 import { NotificationsController } from './notifications.controller';
 import { NotificationsService } from './notifications.service';
 import { UserDocument } from '../database/schemas/user.schema';
-import type { NotificationItemDto } from '@sofe/shared';
 
 describe('NotificationsController (Task T3.10)', () => {
   let controller: NotificationsController;
@@ -26,7 +25,18 @@ describe('NotificationsController (Task T3.10)', () => {
 
   it('lists notifications', async () => {
     service.list.mockResolvedValue({
-      items: [{ id: 'n1', title: 'Test' } as unknown as NotificationItemDto],
+      items: [
+        {
+          id: 'n1',
+          userId: 'u_123',
+          type: 'streak_reminder',
+          title: 'Test',
+          body: 'Test body',
+          data: {},
+          readAt: null,
+          createdAt: new Date().toISOString(),
+        },
+      ] as unknown as Awaited<ReturnType<NotificationsService['list']>>['items'],
       total: 1,
       unreadCount: 1,
       page: 1,

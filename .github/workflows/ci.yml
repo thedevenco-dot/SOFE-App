@@ -36,6 +36,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build shared package
+        run: pnpm --filter @sofe/shared build
+
       - name: Check code formatting with Prettier
         run: pnpm format:check
 
@@ -63,6 +66,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build shared package
+        run: pnpm --filter @sofe/shared build
+
       - name: Run strict typechecking across all packages
         run: pnpm typecheck
 
@@ -86,6 +92,9 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Build shared package
+        run: pnpm --filter @sofe/shared build
 
       - name: Run test suites across workspace
         run: pnpm test
@@ -117,6 +126,9 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Build shared package
+        run: pnpm --filter @sofe/shared build
 
       - name: Build packages and applications
         run: pnpm build

@@ -40,7 +40,7 @@ export interface CategoryOption {
   slug: string;
 }
 
-export function slugify(text: string): string {
+function slugify(text: string): string {
   return text
     .toString()
     .toLowerCase()

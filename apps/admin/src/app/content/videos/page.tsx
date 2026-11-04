@@ -48,13 +48,13 @@ interface TopicOption {
   slug: string;
 }
 
-export function formatDuration(seconds: number = 0): string {
+function formatDuration(seconds: number = 0): string {
   const mins = Math.floor(seconds / 60);
   const secs = seconds % 60;
   return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
 }
 
-export function slugify(text: string): string {
+function slugify(text: string): string {
   return text
     .toString()
     .toLowerCase()
