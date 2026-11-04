@@ -25,6 +25,10 @@ function AppNavigation() {
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         <Stack.Screen name="(onboarding)" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="home" options={{ headerShown: false }} />
+        <Stack.Screen name="learn" options={{ headerShown: false }} />
+        <Stack.Screen name="practise" options={{ headerShown: false }} />
+        <Stack.Screen name="startup-world" options={{ headerShown: false }} />
         <Stack.Screen name="gallery" options={{ headerShown: false }} />
       </Stack>
     </>

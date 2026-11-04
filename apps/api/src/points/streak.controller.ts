@@ -19,4 +19,10 @@ export class StreakController {
     const userId = req.user._id?.toString() || req.user.userId!;
     return this.streakService.getStreakStatus(userId, tz);
   }
+
+  @Get('status')
+  async getStreakStatus(@Req() req: AuthenticatedRequest, @Query('tz') tz?: string) {
+    const userId = req.user._id?.toString() || req.user.userId!;
+    return this.streakService.getStreakStatus(userId, tz);
+  }
 }

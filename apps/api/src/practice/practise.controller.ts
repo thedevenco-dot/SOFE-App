@@ -1,4 +1,4 @@
-import { Controller, Get, Query, Req } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Req } from '@nestjs/common';
 import { Auth } from '../common/decorators/auth.decorator';
 import { PracticeService } from './practice.service';
 
@@ -25,5 +25,31 @@ export class PractiseController {
     const userId = req.user._id?.toString() || req.user.userId!;
     const parsedLimit = limit ? parseInt(limit, 10) : 20;
     return this.practiceService.getPracticeHistory(userId, parsedLimit);
+  }
+
+  @Get('reflection/today')
+  async getTodayReflection(@Query('tz') tz?: string) {
+    return this.practiceService.getTodayReflection(tz);
+  }
+
+  @Post('reflection')
+  async submitReflection(
+    @Req() req: AuthenticatedRequest,
+    @Body() dto: { responseText: string; promptId?: string },
+    @Query('tz') tz?: string,
+  ) {
+    const userId = req.user._id?.toString() || req.user.userId!;
+    return this.practiceService.submitReflection(userId, dto, tz);
+  }
+
+  @Get('rewards')
+  async getRewards() {
+    return this.practiceService.getLearnerRewards();
+  }
+
+  @Post('rewards/:id/redeem')
+  async redeemReward(@Req() req: AuthenticatedRequest, @Param('id') rewardId: string) {
+    const userId = req.user._id?.toString() || req.user.userId!;
+    return this.practiceService.redeemReward(userId, rewardId);
   }
 }

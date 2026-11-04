@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, Optional } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, Optional } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import {
@@ -7,6 +7,7 @@ import {
   QUIZ_STATUSES,
   PRACTICE_SLOT_KEYS,
   PRACTICE_REF_TYPES,
+  POINTS_LEDGER_REASONS,
   type PracticeTodayResponse,
   type PracticeSlotDto,
 } from '@sofe/shared';
@@ -17,9 +18,18 @@ import {
   PracticeAttemptDocument,
   Quiz,
   QuizDocument,
+  DailyPlan,
+  DailyPlanDocument,
+  Reward,
+  RewardDocument,
+  ReflectionPrompt,
+  ReflectionPromptDocument,
+  GlobalPracticeSchedule,
+  GlobalPracticeScheduleDocument,
 } from '../database/schemas';
 import { getDateKeyInTimezone } from '../home/home.service';
 import { StreakService } from '../points/streak.service';
+import { PointsService } from '../points/points.service';
 import { QuizService } from './quiz.service';
 
 @Injectable()
@@ -31,9 +41,24 @@ export class PracticeService {
     private readonly practiceAttemptModel: Model<PracticeAttemptDocument>,
     @InjectModel(Quiz.name)
     private readonly quizModel: Model<QuizDocument>,
-    private readonly quizService: QuizService,
+    @InjectModel(DailyPlan.name)
+    @Optional()
+    private readonly dailyPlanModel?: Model<DailyPlanDocument>,
+    @InjectModel(Reward.name)
+    @Optional()
+    private readonly rewardModel?: Model<RewardDocument>,
+    @InjectModel(ReflectionPrompt.name)
+    @Optional()
+    private readonly reflectionPromptModel?: Model<ReflectionPromptDocument>,
+    @InjectModel(GlobalPracticeSchedule.name)
+    @Optional()
+    private readonly globalScheduleModel?: Model<GlobalPracticeScheduleDocument>,
+    @Optional()
+    private readonly quizService?: QuizService,
     @Optional()
     private readonly streakService?: StreakService,
+    @Optional()
+    private readonly pointsService?: PointsService,
   ) {}
 
   /**
@@ -119,9 +144,10 @@ export class PracticeService {
       : null;
 
     // Public view of Quick Quiz
-    const publicQuiz = quickQuizDoc
-      ? await this.quizService.getPublicQuiz(quickQuizDoc._id.toString()).catch(() => null)
-      : null;
+    const publicQuiz =
+      quickQuizDoc && this.quizService
+        ? await this.quizService.getPublicQuiz(quickQuizDoc._id.toString()).catch(() => null)
+        : null;
 
     return {
       dateKey,
@@ -174,5 +200,232 @@ export class PracticeService {
         completedAt: (a.completedAt || a.createdAt || new Date()).toISOString(),
       };
     });
+  }
+
+  /**
+   * Retrieves today's reflection prompt for the learner.
+   */
+  async getTodayReflection(tz?: string) {
+    const { dateKey } = getDateKeyInTimezone(tz);
+
+    if (this.globalScheduleModel && this.reflectionPromptModel) {
+      const globalSchedule = await this.globalScheduleModel.findOne({ dateKey });
+      const reflectionSlot = globalSchedule?.slots?.find(
+        (s) => s.slotKey === PRACTICE_SLOT_KEYS.DAILY_REFLECTION,
+      );
+
+      if (reflectionSlot?.refId && Types.ObjectId.isValid(reflectionSlot.refId)) {
+        const promptDoc = await this.reflectionPromptModel.findById(reflectionSlot.refId);
+        if (promptDoc) {
+          return {
+            id: promptDoc._id.toString(),
+            prompt: promptDoc.prompt,
+            category: promptDoc.category,
+            dateKey,
+          };
+        }
+      }
+
+      // If not in schedule, pick latest active prompt
+      const promptDoc = await this.reflectionPromptModel
+        .findOne({ active: true })
+        .sort({ createdAt: -1 });
+      if (promptDoc) {
+        return {
+          id: promptDoc._id.toString(),
+          prompt: promptDoc.prompt,
+          category: promptDoc.category,
+          dateKey,
+        };
+      }
+    }
+
+    // Default thoughtful founder synthesis prompt
+    return {
+      id: 'default_reflection',
+      prompt:
+        'What was your most critical strategic decision today and what cognitive bias might have influenced it?',
+      category: 'strategy',
+      dateKey,
+    };
+  }
+
+  /**
+   * Records learner's daily reflection synthesis, marks slot done, and awards points.
+   */
+  async submitReflection(
+    userId: string,
+    dto: { responseText: string; promptId?: string },
+    tz?: string,
+  ) {
+    if (!dto.responseText || !dto.responseText.trim()) {
+      throw new BadRequestException({
+        code: ERROR_CODES.VALIDATION_FAILED,
+        message: 'Reflection response cannot be empty',
+      });
+    }
+
+    const { dateKey } = getDateKeyInTimezone(tz);
+    const uId = new Types.ObjectId(userId);
+    const pointsAwarded = 20;
+
+    // Mark daily_reflection slot as done in user's practice schedule
+    await this.practiceScheduleModel
+      .findOneAndUpdate(
+        { userId: uId, dateKey, 'slots.slotKey': PRACTICE_SLOT_KEYS.DAILY_REFLECTION },
+        {
+          $set: {
+            'slots.$.done': true,
+          },
+        },
+      )
+      .catch(() => null);
+
+    // Recalculate completedCount
+    const schedule = await this.practiceScheduleModel.findOne({ userId: uId, dateKey });
+    if (schedule) {
+      schedule.completedCount = schedule.slots.filter((s) => s.done).length;
+      await schedule.save().catch(() => null);
+    }
+
+    // Award points idempotently
+    if (this.pointsService) {
+      await this.pointsService
+        .awardPoints({
+          userId,
+          amount: pointsAwarded,
+          reason: POINTS_LEDGER_REASONS.REFLECTION,
+          idempotencyKey: `reflection:${userId}:${dateKey}`,
+          note: 'Completed Daily Executive Reflection',
+        })
+        .catch(() => null);
+    }
+
+    // Update streak activity
+    if (this.streakService) {
+      await this.streakService
+        .recordActivity(userId, tz || 'UTC', undefined, 1, pointsAwarded)
+        .catch(() => null);
+    }
+
+    // Mark DailyPlan item 'reflect' as done if present
+    if (this.dailyPlanModel) {
+      const plan = await this.dailyPlanModel.findOne({ userId: uId, dateKey });
+      if (plan) {
+        const reflectItem = plan.items.find((item) => item.key === 'reflect');
+        if (reflectItem && !reflectItem.done) {
+          reflectItem.done = true;
+          reflectItem.doneAt = new Date();
+          plan.completedCount = plan.items.filter((i) => i.done).length;
+          await plan.save().catch(() => null);
+        }
+      }
+    }
+
+    return {
+      success: true,
+      pointsAwarded,
+      done: true,
+      dateKey,
+    };
+  }
+
+  /**
+   * Retrieves active rewards catalogue for learners.
+   */
+  async getLearnerRewards() {
+    if (!this.rewardModel) return [];
+
+    const rewards = await this.rewardModel
+      .find({ status: 'active' })
+      .sort({ costPoints: 1 })
+      .lean();
+
+    return rewards.map((r) => ({
+      id: r._id.toString(),
+      title: r.title,
+      description: r.description,
+      type: r.type,
+      costPoints: r.costPoints,
+      pointsCost: r.costPoints,
+      stock: r.stock,
+      status: r.status,
+    }));
+  }
+
+  /**
+   * Redeems a reward for the learner.
+   */
+  async redeemReward(userId: string, rewardId: string) {
+    if (!Types.ObjectId.isValid(rewardId)) {
+      throw new NotFoundException({
+        code: ERROR_CODES.NOT_FOUND,
+        message: 'Reward not found',
+      });
+    }
+
+    if (!this.rewardModel || !this.pointsService) {
+      throw new BadRequestException({
+        code: ERROR_CODES.VALIDATION_FAILED,
+        message: 'Redemption service unavailable',
+      });
+    }
+
+    const reward = await this.rewardModel.findById(rewardId);
+    if (!reward || reward.status !== 'active') {
+      throw new NotFoundException({
+        code: ERROR_CODES.NOT_FOUND,
+        message: 'Reward not found or no longer active',
+      });
+    }
+
+    if (
+      reward.stock !== null &&
+      reward.stock !== undefined &&
+      reward.stock !== -1 &&
+      reward.stock <= 0
+    ) {
+      throw new BadRequestException({
+        code: ERROR_CODES.VALIDATION_FAILED,
+        message: 'This reward is currently out of stock',
+      });
+    }
+
+    const cost = reward.costPoints;
+    const balanceData = await this.pointsService.getPointsBalance(userId);
+    const currentPoints = balanceData.pointsBalance;
+    if (currentPoints < cost) {
+      throw new BadRequestException({
+        code: ERROR_CODES.VALIDATION_FAILED,
+        message: `Insufficient points. You need ${cost} pts but have ${currentPoints} pts.`,
+      });
+    }
+
+    // Deduct points via PointsService
+    await this.pointsService.awardPoints({
+      userId,
+      amount: -cost,
+      reason: POINTS_LEDGER_REASONS.REDEEM,
+      idempotencyKey: `redeem:${userId}:${rewardId}:${Date.now()}`,
+      note: `Redeemed: ${reward.title}`,
+    });
+
+    // Decrement stock if finite
+    if (reward.stock && reward.stock > 0) {
+      reward.stock -= 1;
+      await reward.save();
+    }
+
+    return {
+      success: true,
+      reward: {
+        id: reward._id.toString(),
+        title: reward.title,
+        type: reward.type,
+        costPoints: cost,
+        pointsCost: cost,
+      },
+      remainingBalance: currentPoints - cost,
+    };
   }
 }

@@ -9,6 +9,12 @@ import {
   PracticeScheduleSchema,
   DailyPlan,
   DailyPlanSchema,
+  Reward,
+  RewardSchema,
+  ReflectionPrompt,
+  ReflectionPromptSchema,
+  GlobalPracticeSchedule,
+  GlobalPracticeScheduleSchema,
 } from '../database/schemas';
 import { PointsModule } from '../points/points.module';
 import { QuizService } from './quiz.service';
@@ -23,6 +29,9 @@ import { PractiseController } from './practise.controller';
       { name: PracticeAttempt.name, schema: PracticeAttemptSchema },
       { name: PracticeSchedule.name, schema: PracticeScheduleSchema },
       { name: DailyPlan.name, schema: DailyPlanSchema },
+      { name: Reward.name, schema: RewardSchema },
+      { name: ReflectionPrompt.name, schema: ReflectionPromptSchema },
+      { name: GlobalPracticeSchedule.name, schema: GlobalPracticeScheduleSchema },
     ]),
     PointsModule,
   ],
