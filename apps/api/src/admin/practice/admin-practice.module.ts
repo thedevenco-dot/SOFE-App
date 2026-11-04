@@ -33,6 +33,8 @@ import { AdminRewardsController } from './admin-rewards.controller';
 
 import { AdminQuotesPromptsService } from './admin-quotes-prompts.service';
 import { AdminQuotesPromptsController } from './admin-quotes-prompts.controller';
+import { AdminAchievementsController } from './admin-achievements.controller';
+import { AchievementsModule } from '../../achievements/achievements.module';
 
 @Module({
   imports: [
@@ -47,6 +49,7 @@ import { AdminQuotesPromptsController } from './admin-quotes-prompts.controller'
     ]),
     AdminModule,
     PointsModule,
+    AchievementsModule,
   ],
   controllers: [
     AdminQuizzesController,
@@ -54,6 +57,7 @@ import { AdminQuotesPromptsController } from './admin-quotes-prompts.controller'
     AdminPointsController,
     AdminRewardsController,
     AdminQuotesPromptsController,
+    AdminAchievementsController,
   ],
   providers: [
     AdminQuizzesService,

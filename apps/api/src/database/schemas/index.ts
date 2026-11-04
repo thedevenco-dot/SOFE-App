@@ -46,3 +46,7 @@ export * from './reward.schema';
 export * from './reward-redemption.schema';
 export * from './global-practice-schedule.schema';
 export * from './reflection-prompt.schema';
+
+// Achievements (T3.8)
+export * from './achievement.schema';
+export * from './user-achievement.schema';

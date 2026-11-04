@@ -22,6 +22,8 @@ import {
   QuoteSchema,
   Word,
   WordSchema,
+  Achievement,
+  AchievementSchema,
 } from '../schemas';
 import { SEED_CATEGORIES } from './data/categories.data';
 import { SEED_INSTRUCTORS } from './data/instructors.data';
@@ -33,6 +35,7 @@ import { SEED_BOOKS } from './data/books.data';
 import { SEED_VIDEOS } from './data/videos.data';
 import { SEED_QUOTES } from './data/quotes.data';
 import { SEED_WORDS } from './data/words.data';
+import { SEED_ACHIEVEMENTS } from './data/achievements.data';
 
 export interface SeedResult {
   categories: number;
@@ -46,6 +49,7 @@ export interface SeedResult {
   videos: number;
   quotes: number;
   words: number;
+  achievements?: number;
 }
 
 export async function runContentSeed(connection?: Connection): Promise<SeedResult> {
@@ -62,6 +66,7 @@ export async function runContentSeed(connection?: Connection): Promise<SeedResul
   const VideoModel = conn.model(Video.name, VideoSchema);
   const QuoteModel = conn.model(Quote.name, QuoteSchema);
   const WordModel = conn.model(Word.name, WordSchema);
+  const AchievementModel = conn.model(Achievement.name, AchievementSchema);
 
   // 1. Categories
   const categoryMap = new Map<string, Types.ObjectId>();
@@ -289,6 +294,28 @@ export async function runContentSeed(connection?: Connection): Promise<SeedResul
     wordsSeeded++;
   }
 
+  // 11. Achievements
+  let achievementsSeeded = 0;
+  for (const a of SEED_ACHIEVEMENTS) {
+    await AchievementModel.findOneAndUpdate(
+      { key: a.key },
+      {
+        $set: {
+          key: a.key,
+          title: a.title,
+          description: a.description,
+          iconUrl: a.iconUrl,
+          tier: a.tier,
+          rule: a.rule,
+          status: a.status,
+          order: a.order,
+        },
+      },
+      { upsert: true, new: true },
+    );
+    achievementsSeeded++;
+  }
+
   return {
     categories: categoryMap.size,
     instructors: instructorMap.size,
@@ -301,5 +328,6 @@ export async function runContentSeed(connection?: Connection): Promise<SeedResul
     videos: videosSeeded,
     quotes: quotesSeeded,
     words: wordsSeeded,
+    achievements: achievementsSeeded,
   };
 }

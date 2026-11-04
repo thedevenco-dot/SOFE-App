@@ -42,6 +42,10 @@ import {
   BookmarkSchema,
   TopicFollow,
   TopicFollowSchema,
+  Achievement,
+  AchievementSchema,
+  UserAchievement,
+  UserAchievementSchema,
 } from './schemas';
 
 @Global()
@@ -77,6 +81,8 @@ import {
       { name: ContentVersion.name, schema: ContentVersionSchema },
       { name: Bookmark.name, schema: BookmarkSchema },
       { name: TopicFollow.name, schema: TopicFollowSchema },
+      { name: Achievement.name, schema: AchievementSchema },
+      { name: UserAchievement.name, schema: UserAchievementSchema },
     ]),
   ],
   exports: [MongooseModule],

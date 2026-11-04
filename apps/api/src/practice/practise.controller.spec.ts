@@ -125,5 +125,13 @@ describe('Quizzes & Practise Controllers (Task T3.4)', () => {
       expect(res).toEqual({ success: true, remainingBalance: 400 });
       expect(mockPracticeService.redeemReward).toHaveBeenCalledWith('user_123', 'rew1', 'idemp-1');
     });
+
+    it('redeemReward passes idempotency key when provided', async () => {
+      const res = await practiseController.redeemReward(mockUserReq, 'rew1', {
+        idempotencyKey: 'idemp-1',
+      });
+      expect(res).toEqual({ success: true, remainingBalance: 400 });
+      expect(mockPracticeService.redeemReward).toHaveBeenCalledWith('user_123', 'rew1', 'idemp-1');
+    });
   });
 });

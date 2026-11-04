@@ -42,6 +42,7 @@ describe('Seed Runner (runContentSeed)', () => {
     expect(result.videos).toBe(3);
     expect(result.quotes).toBe(30);
     expect(result.words).toBe(20);
+    expect(result.achievements).toBe(6);
 
     // Verify findOneAndUpdate was called with upsert: true
     expect(mockFindOneAndUpdate).toHaveBeenCalled();

@@ -1,6 +1,13 @@
 import { z } from 'zod';
 import { dateKeySchema } from './common';
-import { POINTS_LEDGER_REASONS, type PointsLedgerReason } from '../enums/practice';
+import {
+  POINTS_LEDGER_REASONS,
+  ACHIEVEMENT_TIERS,
+  ACHIEVEMENT_RULE_TYPES,
+  type PointsLedgerReason,
+  type AchievementTier,
+  type AchievementRuleType,
+} from '../enums/practice';
 
 export const quizAnswerSubmissionSchema = z.object({
   questionId: z.string().min(1),
@@ -449,3 +456,74 @@ export const rewardRedemptionResponseSchema = z.object({
   remainingBalance: z.number().int(),
 });
 export type RewardRedemptionResponseDto = z.infer<typeof rewardRedemptionResponseSchema>;
+
+// ==========================================
+// Achievement Schemas (Task T3.8)
+// ==========================================
+
+export const achievementTierSchema = z.enum(
+  Object.values(ACHIEVEMENT_TIERS) as [AchievementTier, ...AchievementTier[]],
+);
+
+export const achievementRuleTypeSchema = z.enum(
+  Object.values(ACHIEVEMENT_RULE_TYPES) as [AchievementRuleType, ...AchievementRuleType[]],
+);
+
+export const achievementRuleSchema = z.object({
+  type: achievementRuleTypeSchema,
+  threshold: z.number().int().min(1),
+});
+export type AchievementRuleDto = z.infer<typeof achievementRuleSchema>;
+
+export const achievementSchema = z.object({
+  id: z.string().min(1),
+  key: z.string().min(1),
+  title: z.string().min(1),
+  description: z.string().min(1),
+  iconUrl: z.string().min(1),
+  tier: achievementTierSchema,
+  rule: achievementRuleSchema,
+  status: z.enum(['active', 'inactive']).default('active'),
+  order: z.number().int().default(0),
+  createdAt: z.string().datetime().optional(),
+  updatedAt: z.string().datetime().optional(),
+});
+export type AchievementDto = z.infer<typeof achievementSchema>;
+
+export const createAchievementSchema = achievementSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+export type CreateAchievementDto = z.infer<typeof createAchievementSchema>;
+
+export const updateAchievementSchema = createAchievementSchema.partial();
+export type UpdateAchievementDto = z.infer<typeof updateAchievementSchema>;
+
+export const userAchievementSchema = z.object({
+  id: z.string().min(1),
+  userId: z.string().min(1),
+  achievementId: z.string().min(1),
+  achievementKey: z.string().min(1),
+  unlockedAt: z.string().datetime(),
+  progressSnapshot: z.record(z.unknown()).optional(),
+});
+export type UserAchievementDto = z.infer<typeof userAchievementSchema>;
+
+export const learnerAchievementItemSchema = achievementSchema.extend({
+  unlocked: z.boolean(),
+  unlockedAt: z.string().datetime().optional(),
+  progress: z.object({
+    current: z.number(),
+    threshold: z.number(),
+    percent: z.number().min(0).max(100),
+  }),
+});
+export type LearnerAchievementItemDto = z.infer<typeof learnerAchievementItemSchema>;
+
+export const learnerAchievementsResponseSchema = z.object({
+  totalCount: z.number().int(),
+  unlockedCount: z.number().int(),
+  items: z.array(learnerAchievementItemSchema),
+});
+export type LearnerAchievementsResponseDto = z.infer<typeof learnerAchievementsResponseSchema>;
