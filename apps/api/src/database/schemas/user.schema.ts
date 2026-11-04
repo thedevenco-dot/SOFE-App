@@ -117,6 +117,9 @@ export class User {
   @Prop()
   bio?: string;
 
+  @Prop()
+  location?: string;
+
   @Prop({ default: 'Asia/Kolkata' })
   timezone!: string;
 

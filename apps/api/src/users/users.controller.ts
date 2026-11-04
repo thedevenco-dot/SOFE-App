@@ -34,4 +34,12 @@ export class UsersController {
   ): Promise<ApiSuccessEnvelope<UserDocument>> {
     return this.usersService.updateMe(user, body);
   }
+
+  @Auth()
+  @Get('stats')
+  @ApiOperation({ summary: 'Get current learner learning and practice statistics' })
+  @ApiResponse({ status: 200, description: 'Stats returned successfully' })
+  async getMyStats(@CurrentUser() user: UserDocument) {
+    return this.usersService.getMyStats(user._id.toString());
+  }
 }

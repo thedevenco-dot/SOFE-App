@@ -50,3 +50,6 @@ export * from './reflection-prompt.schema';
 // Achievements (T3.8)
 export * from './achievement.schema';
 export * from './user-achievement.schema';
+
+// Projects & Portfolio (T3.9)
+export * from './project.schema';

@@ -46,6 +46,8 @@ import {
   AchievementSchema,
   UserAchievement,
   UserAchievementSchema,
+  Project,
+  ProjectSchema,
 } from './schemas';
 
 @Global()
@@ -83,6 +85,7 @@ import {
       { name: TopicFollow.name, schema: TopicFollowSchema },
       { name: Achievement.name, schema: AchievementSchema },
       { name: UserAchievement.name, schema: UserAchievementSchema },
+      { name: Project.name, schema: ProjectSchema },
     ]),
   ],
   exports: [MongooseModule],
