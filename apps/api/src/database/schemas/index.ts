@@ -41,7 +41,8 @@ export * from './quiz.schema';
 export * from './practice-attempt.schema';
 export * from './practice-schedule.schema';
 
-// Admin Practice, Scheduler & Rewards (T3.5)
+// Admin Practice, Scheduler & Rewards (T3.5, T3.7)
 export * from './reward.schema';
+export * from './reward-redemption.schema';
 export * from './global-practice-schedule.schema';
 export * from './reflection-prompt.schema';

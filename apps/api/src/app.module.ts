@@ -18,6 +18,7 @@ import { LearningModule } from './learning/learning.module';
 import { HomeModule } from './home/home.module';
 import { PointsModule } from './points/points.module';
 import { PracticeModule } from './practice/practice.module';
+import { RewardsModule } from './rewards/rewards.module';
 import { HealthModule } from './health/health.module';
 import { MediaModule } from './media/media.module';
 import { WebhooksModule } from './webhooks/webhooks.module';
@@ -44,6 +45,7 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
     HomeModule,
     PointsModule,
     PracticeModule,
+    RewardsModule,
     HealthModule,
     MediaModule,
     WebhooksModule,

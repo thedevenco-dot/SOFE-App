@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query, Req } from '@nestjs/common';
+import { Body, Controller, Get, Headers, Param, Post, Query, Req } from '@nestjs/common';
 import { Auth } from '../common/decorators/auth.decorator';
 import { PracticeService } from './practice.service';
 
@@ -48,8 +48,17 @@ export class PractiseController {
   }
 
   @Post('rewards/:id/redeem')
-  async redeemReward(@Req() req: AuthenticatedRequest, @Param('id') rewardId: string) {
+  async redeemReward(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') rewardId: string,
+    @Body() body?: { idempotencyKey?: string },
+    @Headers('idempotency-key') idempotencyHeader?: string,
+    @Headers('x-idempotency-key') xIdempotencyHeader?: string,
+  ) {
     const userId = req.user._id?.toString() || req.user.userId!;
-    return this.practiceService.redeemReward(userId, rewardId);
+    const idempotencyKey = body?.idempotencyKey || idempotencyHeader || xIdempotencyHeader;
+    return idempotencyKey
+      ? this.practiceService.redeemReward(userId, rewardId, idempotencyKey)
+      : this.practiceService.redeemReward(userId, rewardId);
   }
 }

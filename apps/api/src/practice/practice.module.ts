@@ -17,6 +17,7 @@ import {
   GlobalPracticeScheduleSchema,
 } from '../database/schemas';
 import { PointsModule } from '../points/points.module';
+import { RewardsModule } from '../rewards/rewards.module';
 import { QuizService } from './quiz.service';
 import { PracticeService } from './practice.service';
 import { QuizzesController } from './quizzes.controller';
@@ -34,6 +35,7 @@ import { PractiseController } from './practise.controller';
       { name: GlobalPracticeSchedule.name, schema: GlobalPracticeScheduleSchema },
     ]),
     PointsModule,
+    RewardsModule,
   ],
   controllers: [QuizzesController, PractiseController],
   providers: [QuizService, PracticeService],

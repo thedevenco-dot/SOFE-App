@@ -399,3 +399,53 @@ export type CreateReflectionPromptDto = z.infer<typeof createReflectionPromptSch
 
 export const updateReflectionPromptSchema = createReflectionPromptSchema.partial();
 export type UpdateReflectionPromptDto = z.infer<typeof updateReflectionPromptSchema>;
+
+// ==========================================
+// Reward Redemption Schemas (Task T3.7)
+// ==========================================
+
+export const redeemRewardSchema = z.object({
+  idempotencyKey: z.string().optional(),
+});
+export type RedeemRewardDto = z.infer<typeof redeemRewardSchema>;
+
+export const rewardRedemptionSchema = z.object({
+  id: z.string().min(1),
+  userId: z.string().min(1),
+  rewardId: z.string().min(1),
+  costPoints: z.number().int().min(1),
+  ledgerId: z.string().min(1),
+  enrollmentId: z.string().optional(),
+  status: z.enum(['completed', 'reversed']),
+  idempotencyKey: z.string().optional(),
+  metadata: z.record(z.unknown()).optional(),
+  createdAt: z.string().datetime().optional(),
+  updatedAt: z.string().datetime().optional(),
+});
+export type RewardRedemptionDto = z.infer<typeof rewardRedemptionSchema>;
+
+export const rewardRedemptionResponseSchema = z.object({
+  success: z.boolean(),
+  idempotent: z.boolean().optional(),
+  message: z.string().optional(),
+  redemption: z.object({
+    id: z.string(),
+    userId: z.string(),
+    rewardId: z.string(),
+    costPoints: z.number(),
+    ledgerId: z.string(),
+    enrollmentId: z.string().optional(),
+    status: z.string(),
+    idempotencyKey: z.string().optional(),
+    metadata: z.record(z.unknown()).optional(),
+    createdAt: z.string().optional(),
+  }),
+  enrollment: z
+    .object({
+      id: z.string(),
+      courseId: z.string(),
+    })
+    .optional(),
+  remainingBalance: z.number().int(),
+});
+export type RewardRedemptionResponseDto = z.infer<typeof rewardRedemptionResponseSchema>;

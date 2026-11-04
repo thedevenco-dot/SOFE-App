@@ -30,6 +30,7 @@ import {
 import { getDateKeyInTimezone } from '../home/home.service';
 import { StreakService } from '../points/streak.service';
 import { PointsService } from '../points/points.service';
+import { RewardsService } from '../rewards/rewards.service';
 import { QuizService } from './quiz.service';
 
 @Injectable()
@@ -59,6 +60,8 @@ export class PracticeService {
     private readonly streakService?: StreakService,
     @Optional()
     private readonly pointsService?: PointsService,
+    @Optional()
+    private readonly rewardsService?: RewardsService,
   ) {}
 
   /**
@@ -334,6 +337,10 @@ export class PracticeService {
    * Retrieves active rewards catalogue for learners.
    */
   async getLearnerRewards() {
+    if (this.rewardsService) {
+      return this.rewardsService.listActiveRewards();
+    }
+
     if (!this.rewardModel) return [];
 
     const rewards = await this.rewardModel
@@ -356,7 +363,11 @@ export class PracticeService {
   /**
    * Redeems a reward for the learner.
    */
-  async redeemReward(userId: string, rewardId: string) {
+  async redeemReward(userId: string, rewardId: string, idempotencyKey?: string) {
+    if (this.rewardsService) {
+      return this.rewardsService.redeemReward(userId, rewardId, idempotencyKey);
+    }
+
     if (!Types.ObjectId.isValid(rewardId)) {
       throw new NotFoundException({
         code: ERROR_CODES.NOT_FOUND,
